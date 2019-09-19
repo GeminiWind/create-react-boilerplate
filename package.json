@@ -1,0 +1,21 @@
+{
+  "name": "create-react-boilerplate",
+  "version": "1.0.0",
+  "description": "CLI utility to create react boilerplate",
+  "bin": {
+    "create-react-boilerplate": "./bin/create-react-boilerplate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeminiWind/create-react-boilerplate"
+  },
+  "keywords": [
+    "create-react-boilerplate"
+  ],
+  "author": "GeminiWind <gemini.wind285@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "prompts": "^2.2.1"
+  }
+}
