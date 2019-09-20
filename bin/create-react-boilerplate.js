@@ -55,7 +55,7 @@ const REMOTE_URL = 'git@github.com:kominam/react-boilerplate.git';
   // TODO: delete devDepedencies, script in package.json
   if (!response.isEnableCypress) {
     try {
-      await execSync(`./node_modules/.bin/rimraf ${response.name}/cypress`);
+      await execSync(`./node_modules/.bin/rimraf ${response.name}/cypress ./node_modules/.bin/rimraf ${response.name}/cypress.json`);
     } catch (e) {
       console.log(e);
 
