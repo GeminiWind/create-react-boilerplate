@@ -3,6 +3,8 @@
 const prompts = require('prompts');
 const { exec } = require('child_process');
 const fs = require('fs-extra');
+const chalk = require('chalk');
+const ora = require('ora');
 
 const execSync = require('util').promisify(exec);
 
@@ -24,7 +26,7 @@ const questions = [
   {
     type: 'toggle',
     name: 'isEnableTerraform',
-    message: 'Do you want to setup Terraform script to deploy to AWS?',
+    message: 'Do you want to setup Terraform script to deploy to AWS ?',
     initial: true,
     active: 'yes',
     inactive: 'no'
@@ -36,19 +38,27 @@ const REMOTE_URL = 'git@github.com:kominam/react-boilerplate.git';
 (async () => {
   const response = await prompts(questions);
 
-
   try {
-    console.log('Cloning template ...');
+    const spinner = ora('Cloning template');
+    spinner.start();
+
     await execSync(`git clone ${REMOTE_URL} ${response.name}`);
+    await execSync(`./node_modules/.bin/rimraf ${response.name}/.git`);
+
+    spinner.stop();
   } catch (e) {
+    console.log(e);
+
     throw new Error('Error in cloning template project');
   }
 
   // TODO: delete devDepedencies, script in package.json
   if (!response.isEnableCypress) {
     try {
-      await execSync(`rm -rf ${response.name}/cypress`);
+      await execSync(`./node_modules/.bin/rimraf ${response.name}/cypress`);
     } catch (e) {
+      console.log(e);
+
       throw new Error('Could not disable e2e test.');
     }
   }
@@ -56,9 +66,11 @@ const REMOTE_URL = 'git@github.com:kominam/react-boilerplate.git';
   if (!response.isEnableTerraform) {
     try {
       await execSync(
-        `rm -rf ${response.name}/provision && rm -rf ${response.name}/scripts`
+        `./node_modules/.bin/rimraf ${response.name}/provision && ./node_modules/.bin/rimraf ${response.name}/scripts`
       );
     } catch (e) {
+      console.log(e);
+
       throw new Error('Could not disable Terraform provision.');
     }
   }
@@ -66,5 +78,7 @@ const REMOTE_URL = 'git@github.com:kominam/react-boilerplate.git';
   // TODO: modify name, author in package.json
   // then write new package.json file
 
-  console.log('Done. Run npm install to install deps');
+  console.log('%s Done', chalk.green('✓'));
+
+  // TODO: guide user to run npm install and npm start
 })();
